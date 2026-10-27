@@ -7,12 +7,12 @@ import { AppHeader } from '../../components/AppHeader';
 import { useMonitoring } from '../../context/MonitoringContext';
 import { colors, shadows } from '../../theme';
 import { MonitoringSession } from '../../types';
-import { formatDuration, formatThaiDate } from '../../utils/format';
+import { formatDate, formatDuration } from '../../utils/format';
 
 const STATUS = {
-  safe: { label: 'ปลอดภัย', icon: 'checkmark-circle' as const, color: colors.mintDark, background: colors.mintSoft },
-  warning: { label: 'ควรตรวจสอบ', icon: 'alert-circle' as const, color: '#9A7121', background: colors.butterLight },
-  critical: { label: 'พบความเสี่ยง', icon: 'warning' as const, color: colors.danger, background: '#F9DAD2' },
+  safe: { label: 'Safe journey', icon: 'checkmark-circle' as const, color: colors.mintDark, background: colors.mintSoft },
+  warning: { label: 'Review advised', icon: 'alert-circle' as const, color: '#9A7121', background: colors.butterLight },
+  critical: { label: 'Risk detected', icon: 'warning' as const, color: colors.danger, background: '#F9DAD2' },
 };
 
 function SessionCard({ session }: { session: MonitoringSession }) {
@@ -27,17 +27,17 @@ function SessionCard({ session }: { session: MonitoringSession }) {
           <Ionicons name={status.icon} size={22} color={status.color} />
         </View>
         <View style={styles.cardCopy}>
-          <Text style={styles.date}>{formatThaiDate(session.startedAt)}</Text>
+          <Text style={styles.date}>{formatDate(session.startedAt)}</Text>
           <Text style={[styles.statusLabel, { color: status.color }]}>{status.label}</Text>
         </View>
         <Ionicons name="chevron-forward" color={colors.cocoaSoft} size={20} />
       </View>
       <View style={styles.stats}>
-        <View><Text style={styles.statValue}>{formatDuration(session.endedAt - session.startedAt)}</Text><Text style={styles.statLabel}>ระยะเวลา</Text></View>
+        <View><Text style={styles.statValue}>{formatDuration(session.endedAt - session.startedAt)}</Text><Text style={styles.statLabel}>Duration</Text></View>
         <View style={styles.divider} />
-        <View><Text style={styles.statValue}>{session.events.length}</Text><Text style={styles.statLabel}>เหตุการณ์</Text></View>
+        <View><Text style={styles.statValue}>{session.events.length}</Text><Text style={styles.statLabel}>Events</Text></View>
         <View style={styles.divider} />
-        <View><Text style={styles.statValue}>{session.maxImpact.toFixed(1)}g</Text><Text style={styles.statLabel}>แรงสูงสุด</Text></View>
+        <View><Text style={styles.statValue}>{session.maxImpact.toFixed(1)}g</Text><Text style={styles.statLabel}>Peak force</Text></View>
       </View>
     </Pressable>
   );
@@ -45,30 +45,30 @@ function SessionCard({ session }: { session: MonitoringSession }) {
 
 export default function HistoryScreen() {
   const { sessions, clearHistory, isLoading } = useMonitoring();
-  const confirmClear = () => Alert.alert('ล้างประวัติทั้งหมด?', 'ข้อมูลการตรวจสอบที่บันทึกไว้จะถูกลบออกจากเครื่อง', [
-    { text: 'ยกเลิก', style: 'cancel' },
-    { text: 'ล้างข้อมูล', style: 'destructive', onPress: () => void clearHistory() },
+  const confirmClear = () => Alert.alert('Clear all history?', 'All saved monitoring sessions will be removed from this device.', [
+    { text: 'Cancel', style: 'cancel' },
+    { text: 'Clear history', style: 'destructive', onPress: () => void clearHistory() },
   ]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <AppHeader title="สมุดการเดินทาง" subtitle="ย้อนดูคุณภาพการขนส่งของแต่ละรอบ" />
+        <AppHeader title="Journey log" subtitle="Review handling quality from every monitoring session." />
         <View style={styles.summaryBanner}>
-          <View><Text style={styles.summaryNumber}>{sessions.length}</Text><Text style={styles.summaryLabel}>การเดินทางที่บันทึกไว้</Text></View>
+          <View><Text style={styles.summaryNumber}>{sessions.length}</Text><Text style={styles.summaryLabel}>saved journeys</Text></View>
           {sessions.length ? (
-            <Pressable onPress={confirmClear} style={styles.clearButton}><Ionicons name="trash-outline" size={16} color={colors.danger} /><Text style={styles.clearText}>ล้างทั้งหมด</Text></Pressable>
+            <Pressable onPress={confirmClear} style={styles.clearButton}><Ionicons name="trash-outline" size={16} color={colors.danger} /><Text style={styles.clearText}>Clear all</Text></Pressable>
           ) : null}
         </View>
 
-        {isLoading ? <Text style={styles.loading}>กำลังเปิดสมุดบันทึก…</Text> : sessions.length ? (
+        {isLoading ? <Text style={styles.loading}>Loading journey log…</Text> : sessions.length ? (
           <View style={styles.list}>{sessions.map((session) => <SessionCard key={session.id} session={session} />)}</View>
         ) : (
           <View style={styles.empty}>
             <View style={styles.emptyIcon}><Ionicons name="map" size={38} color={colors.ochre} /></View>
-            <Text style={styles.emptyTitle}>ยังไม่มีการเดินทาง</Text>
-            <Text style={styles.emptyBody}>เริ่มตรวจสอบพัสดุหนึ่งรอบ แล้วผลลัพธ์จะถูกเก็บไว้ที่นี่โดยอัตโนมัติ</Text>
-            <Pressable onPress={() => router.replace('/')} style={styles.goButton}><Text style={styles.goText}>ไปหน้าเริ่มต้น</Text></Pressable>
+            <Text style={styles.emptyTitle}>No journeys yet</Text>
+            <Text style={styles.emptyBody}>Complete a monitoring session and its results will appear here automatically.</Text>
+            <Pressable onPress={() => router.replace('/')} style={styles.goButton}><Text style={styles.goText}>Start monitoring</Text></Pressable>
           </View>
         )}
       </ScrollView>

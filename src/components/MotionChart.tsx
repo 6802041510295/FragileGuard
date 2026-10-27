@@ -29,7 +29,7 @@ export function MotionChart({ samples }: Props) {
     <View style={styles.wrap}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>การเคลื่อนไหวล่าสุด</Text>
+          <Text style={styles.title}>Recent motion</Text>
           <Text style={styles.subtitle}>Rotation rate · rad/s</Text>
         </View>
         <View style={styles.livePill}><View style={styles.dot} /><Text style={styles.live}>LIVE</Text></View>
@@ -46,7 +46,7 @@ export function MotionChart({ samples }: Props) {
             <Polyline points={points} fill="none" stroke="url(#line)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         ) : (
-          <View style={styles.empty}><Text style={styles.emptyText}>กราฟจะเริ่มเมื่อกดตรวจสอบ</Text></View>
+          <View style={styles.empty}><Text style={styles.emptyText}>The chart starts with monitoring</Text></View>
         )}
       </View>
     </View>

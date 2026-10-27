@@ -9,8 +9,8 @@ export const formatDuration = (durationMs: number) => {
     : `${displayMinutes.toString().padStart(2, '0')}:${displaySeconds.toString().padStart(2, '0')}`;
 };
 
-export const formatThaiDate = (timestamp: number) =>
-  new Intl.DateTimeFormat('th-TH', {
+export const formatDate = (timestamp: number) =>
+  new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
     month: 'short',
     year: '2-digit',
@@ -19,7 +19,7 @@ export const formatThaiDate = (timestamp: number) =>
   }).format(new Date(timestamp));
 
 export const formatEventTime = (timestamp: number) =>
-  new Intl.DateTimeFormat('th-TH', {
+  new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',

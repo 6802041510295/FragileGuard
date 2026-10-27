@@ -63,11 +63,11 @@ export const classifySample = (
 };
 
 const EVENT_COPY: Record<EventType, { title: string; unit: string }> = {
-  tilt: { title: 'เอียงเกินกำหนด', unit: '°' },
-  flip: { title: 'พัสดุพลิกกลับด้าน', unit: '°' },
-  impact: { title: 'ตรวจพบแรงกระแทก', unit: 'g' },
-  shake: { title: 'ตรวจพบการเขย่า', unit: 'g' },
-  rotation: { title: 'หมุนเร็วผิดปกติ', unit: ' rad/s' },
+  tilt: { title: 'Tilt limit exceeded', unit: '°' },
+  flip: { title: 'Package flipped', unit: '°' },
+  impact: { title: 'Impact detected', unit: 'g' },
+  shake: { title: 'Shaking detected', unit: 'g' },
+  rotation: { title: 'Rapid rotation', unit: ' rad/s' },
 };
 
 export const createHandlingEvent = (

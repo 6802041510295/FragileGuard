@@ -4,9 +4,9 @@ import { colors } from '../theme';
 import { Sensitivity } from '../types';
 
 const OPTIONS: { key: Sensitivity; label: string }[] = [
-  { key: 'gentle', label: 'บอบบาง' },
-  { key: 'normal', label: 'ทั่วไป' },
-  { key: 'rugged', label: 'ทนทาน' },
+  { key: 'gentle', label: 'Fragile' },
+  { key: 'normal', label: 'Standard' },
+  { key: 'rugged', label: 'Rugged' },
 ];
 
 export function SensitivityPicker({ value, onChange, disabled }: { value: Sensitivity; onChange: (value: Sensitivity) => void; disabled?: boolean }) {

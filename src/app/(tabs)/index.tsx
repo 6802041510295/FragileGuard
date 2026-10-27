@@ -38,7 +38,7 @@ export default function MonitorScreen() {
       return;
     }
     const started = await startMonitoring();
-    if (!started) Alert.alert('ไม่พบเซนเซอร์', 'อุปกรณ์นี้ต้องมีทั้ง Accelerometer และ Gyroscope เพื่อเริ่มตรวจสอบ');
+    if (!started) Alert.alert('Sensors unavailable', 'This device needs both an accelerometer and a gyroscope to begin monitoring.');
   };
 
   const rotateX = `${Math.max(-18, Math.min(18, liveSample.accel.y * 18))}deg`;
@@ -47,16 +47,16 @@ export default function MonitorScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <AppHeader title="ดูแลทุกการเดินทาง" subtitle="ติดตามการเอียง การหมุน และแรงกระแทกของพัสดุ" />
+        <AppHeader title="Guard every journey" subtitle="Track package tilt, rotation, and impact in real time." />
 
         <LinearGradient colors={[colors.mint, '#75C4A7', '#E7CC67']} locations={[0, 0.63, 1]} style={[styles.hero, shadows.card]}>
           <View style={styles.stars}><Text style={styles.star}>✦</Text><Text style={styles.starSmall}>·</Text><Text style={styles.star}>✦</Text></View>
           <View style={styles.heroCopy}>
             <View style={styles.statusPill}>
               <View style={[styles.statusDot, { backgroundColor: sensorsReady ? '#EAF8A7' : colors.coral }]} />
-              <Text style={styles.statusText}>{checking ? 'กำลังตรวจสอบเซนเซอร์' : sensorsReady ? 'เซนเซอร์พร้อม' : 'เซนเซอร์ไม่พร้อม'}</Text>
+              <Text style={styles.statusText}>{checking ? 'Checking sensors' : sensorsReady ? 'Sensors ready' : 'Sensors unavailable'}</Text>
             </View>
-            <Text style={styles.heroTitle}>{isMonitoring ? 'กำลังเฝ้าระวัง' : 'พร้อมออกเดินทาง!'}</Text>
+            <Text style={styles.heroTitle}>{isMonitoring ? 'Monitoring in progress' : 'Ready for the journey!'}</Text>
             <Text style={styles.timer}>{formatDuration(elapsedMs)}</Text>
           </View>
           <View style={[styles.heroImageWrap, { transform: [{ perspective: 700 }, { rotateX }, { rotateY }] }]}>
@@ -68,37 +68,37 @@ export default function MonitorScreen() {
             style={({ pressed }) => [styles.primaryButton, isMonitoring && styles.stopButton, pressed && styles.pressed]}
           >
             <Ionicons name={isMonitoring ? 'stop' : 'shield-checkmark'} color={colors.cream} size={20} />
-            <Text style={styles.primaryButtonText}>{isMonitoring ? 'หยุดและบันทึก' : 'เริ่มตรวจสอบ'}</Text>
+            <Text style={styles.primaryButtonText}>{isMonitoring ? 'Stop & save' : 'Start monitoring'}</Text>
           </Pressable>
         </LinearGradient>
 
         <View style={styles.sectionHeader}>
-          <View><Text style={styles.sectionTitle}>ระดับความไว</Text><Text style={styles.sectionHint}>เลือกให้เหมาะกับสิ่งของก่อนเริ่ม</Text></View>
+          <View><Text style={styles.sectionTitle}>Sensitivity</Text><Text style={styles.sectionHint}>Choose a profile before you begin</Text></View>
           <Pressable onPress={calibrate} style={styles.calibrateButton}>
             <Ionicons name="locate" size={15} color={colors.mintDark} />
-            <Text style={styles.calibrateText}>ตั้งแนวใหม่</Text>
+            <Text style={styles.calibrateText}>Recalibrate</Text>
           </Pressable>
         </View>
         <SensitivityPicker value={sensitivity} onChange={setSensitivity} disabled={isMonitoring} />
 
         <View style={styles.metricRow}>
-          <MetricCard icon="analytics" label="มุมเอียง" value={liveSample.tiltAngle.toFixed(0)} unit="°" tone="mint" />
-          <MetricCard icon="flash" label="แรงรวม" value={liveSample.accelerationG.toFixed(1)} unit="g" tone="yellow" />
-          <MetricCard icon="sync" label="การหมุน" value={liveSample.rotationRate.toFixed(1)} unit="rad/s" tone="coral" />
+          <MetricCard icon="analytics" label="Tilt angle" value={liveSample.tiltAngle.toFixed(0)} unit="°" tone="mint" />
+          <MetricCard icon="flash" label="Total force" value={liveSample.accelerationG.toFixed(1)} unit="g" tone="yellow" />
+          <MetricCard icon="sync" label="Rotation" value={liveSample.rotationRate.toFixed(1)} unit="rad/s" tone="coral" />
         </View>
 
         <MotionChart samples={recentSamples} />
 
         <View style={styles.eventCard}>
           <View style={styles.sectionHeader}>
-            <View><Text style={styles.sectionTitle}>เหตุการณ์ล่าสุด</Text><Text style={styles.sectionHint}>{currentEvents.length} เหตุการณ์ในรอบนี้</Text></View>
+            <View><Text style={styles.sectionTitle}>Recent events</Text><Text style={styles.sectionHint}>{currentEvents.length} events this session</Text></View>
             <View style={styles.countBubble}><Text style={styles.countText}>{currentEvents.length}</Text></View>
           </View>
           {currentEvents.length ? currentEvents.slice(0, 4).map((event) => <EventRow key={event.id} event={event} />) : (
             <View style={styles.emptyEvents}>
               <Ionicons name="leaf" size={24} color={colors.sage} />
-              <Text style={styles.emptyTitle}>ยังไม่มีเหตุการณ์ผิดปกติ</Text>
-              <Text style={styles.emptySubtitle}>พัสดุของคุณกำลังเดินทางอย่างปลอดภัย</Text>
+              <Text style={styles.emptyTitle}>No unusual events</Text>
+              <Text style={styles.emptySubtitle}>Your package is traveling safely</Text>
             </View>
           )}
         </View>

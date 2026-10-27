@@ -7,10 +7,10 @@ import { useMonitoring } from '../../context/MonitoringContext';
 import { colors } from '../../theme';
 
 const ITEMS = [
-  { icon: 'trending-up' as const, title: 'การเอียงและพลิก', body: 'เทียบเวกเตอร์แรงโน้มถ่วงปัจจุบันกับแนวตั้งต้นของพัสดุ' },
-  { icon: 'flash' as const, title: 'แรงกระแทก', body: 'ตรวจจับความเร่งรวมที่พุ่งเกินระดับของสิ่งของที่เลือก' },
-  { icon: 'sync' as const, title: 'การหมุน', body: 'วัดความเร็วเชิงมุมสามแกนจาก Gyroscope หน่วย rad/s' },
-  { icon: 'save' as const, title: 'บันทึกในเครื่อง', body: 'เก็บประวัติบนอุปกรณ์เท่านั้น ไม่มีการส่งข้อมูลขึ้นเซิร์ฟเวอร์' },
+  { icon: 'trending-up' as const, title: 'Tilt & flip', body: 'Compares the current gravity vector with the package baseline.' },
+  { icon: 'flash' as const, title: 'Impact', body: 'Detects acceleration that exceeds the selected handling profile.' },
+  { icon: 'sync' as const, title: 'Rotation', body: 'Measures three-axis angular velocity from the gyroscope in rad/s.' },
+  { icon: 'save' as const, title: 'On-device history', body: 'Stores monitoring history on this device without sending it to a server.' },
 ];
 
 export default function AboutScreen() {
@@ -18,21 +18,21 @@ export default function AboutScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <AppHeader title="ทำงานอย่างไร" subtitle="ผู้ช่วยตัวเล็กที่คอยดูแลพัสดุตลอดการเดินทาง" />
+        <AppHeader title="How it works" subtitle="A little guardian for every package journey." />
         <View style={styles.sensorCard}>
-          <Text style={styles.sensorTitle}>สถานะอุปกรณ์</Text>
+          <Text style={styles.sensorTitle}>Device status</Text>
           <View style={styles.sensorRow}>
             <SensorStatus label="Accelerometer" ready={availability.accelerometer} />
             <SensorStatus label="Gyroscope" ready={availability.gyroscope} />
           </View>
         </View>
         <View style={styles.flowCard}>
-          <Text style={styles.cardTitle}>ก่อนเริ่มตรวจสอบ</Text>
-          <View style={styles.stepRow}><Step number="1" text="วางมือถือให้แน่นกับกล่องหรือสิ่งของ" /></View>
+          <Text style={styles.cardTitle}>Before monitoring</Text>
+          <View style={styles.stepRow}><Step number="1" text="Secure the phone firmly to the package." /></View>
           <View style={styles.connector} />
-          <View style={styles.stepRow}><Step number="2" text="เลือกความไวให้เหมาะกับพัสดุ" /></View>
+          <View style={styles.stepRow}><Step number="2" text="Choose a sensitivity profile for the item." /></View>
           <View style={styles.connector} />
-          <View style={styles.stepRow}><Step number="3" text="กดตั้งแนวใหม่ แล้วเริ่มตรวจสอบ" /></View>
+          <View style={styles.stepRow}><Step number="3" text="Recalibrate, then start monitoring." /></View>
         </View>
         <View style={styles.grid}>{ITEMS.map((item) => (
           <View key={item.title} style={styles.infoCard}>
@@ -43,7 +43,7 @@ export default function AboutScreen() {
         ))}</View>
         <View style={styles.notice}>
           <Ionicons name="information-circle" size={20} color="#9A7121" />
-          <Text style={styles.noticeText}>แอปต้องเปิดอยู่ระหว่างการตรวจสอบ เนื่องจากระบบมือถืออาจหยุดการอ่านเซนเซอร์เมื่อแอปทำงานเบื้องหลัง</Text>
+          <Text style={styles.noticeText}>Keep the app open while monitoring. Your phone may pause sensor updates when the app runs in the background.</Text>
         </View>
         <Text style={styles.version}>FragileGuard · Version 1.0.0</Text>
       </ScrollView>

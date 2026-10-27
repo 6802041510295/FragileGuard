@@ -9,7 +9,7 @@ import { MotionChart } from '../../components/MotionChart';
 import { useMonitoring } from '../../context/MonitoringContext';
 import { colors } from '../../theme';
 import { SensorSample } from '../../types';
-import { formatDuration, formatThaiDate } from '../../utils/format';
+import { formatDate, formatDuration } from '../../utils/format';
 
 export default function SessionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -34,65 +34,65 @@ export default function SessionDetailScreen() {
 
   const replaySample: SensorSample | undefined = useMemo(() => session?.samples[replayIndex], [session, replayIndex]);
 
-  if (isLoading) return <SafeAreaView style={styles.center}><Text style={styles.muted}>กำลังโหลด…</Text></SafeAreaView>;
+  if (isLoading) return <SafeAreaView style={styles.center}><Text style={styles.muted}>Loading…</Text></SafeAreaView>;
   if (!session) return (
     <SafeAreaView style={styles.center}>
       <Ionicons name="file-tray-outline" size={42} color={colors.ochre} />
-      <Text style={styles.notFound}>ไม่พบข้อมูลการเดินทางนี้</Text>
-      <Pressable onPress={() => router.back()} style={styles.smallButton}><Text style={styles.smallButtonText}>ย้อนกลับ</Text></Pressable>
+      <Text style={styles.notFound}>Journey data not found</Text>
+      <Pressable onPress={() => router.back()} style={styles.smallButton}><Text style={styles.smallButtonText}>Go back</Text></Pressable>
     </SafeAreaView>
   );
 
   const sample = replaySample ?? session.samples[0];
   const rotateX = `${Math.max(-24, Math.min(24, (sample?.accel.y ?? 0) * 20))}deg`;
   const rotateY = `${Math.max(-24, Math.min(24, -(sample?.accel.x ?? 0) * 20))}deg`;
-  const statusText = session.status === 'safe' ? 'เดินทางปลอดภัย' : session.status === 'warning' ? 'พบเหตุการณ์ที่ควรตรวจสอบ' : 'พบความเสี่ยงต่อพัสดุ';
+  const statusText = session.status === 'safe' ? 'Safe journey' : session.status === 'warning' ? 'Review advised' : 'Package risk detected';
   const statusColor = session.status === 'safe' ? colors.mintDark : session.status === 'warning' ? '#9A7121' : colors.danger;
 
-  const confirmDelete = () => Alert.alert('ลบบันทึกนี้?', 'เมื่อลบแล้วจะไม่สามารถกู้คืนได้', [
-    { text: 'ยกเลิก', style: 'cancel' },
-    { text: 'ลบ', style: 'destructive', onPress: async () => { await deleteSession(session.id); router.back(); } },
+  const confirmDelete = () => Alert.alert('Delete this journey?', 'This saved session cannot be recovered after deletion.', [
+    { text: 'Cancel', style: 'cancel' },
+    { text: 'Delete', style: 'destructive', onPress: async () => { await deleteSession(session.id); router.back(); } },
   ]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.topBar}>
         <Pressable onPress={() => router.back()} style={styles.iconButton}><Ionicons name="chevron-back" size={23} color={colors.cocoa} /></Pressable>
-        <Text style={styles.topTitle}>สรุปการเดินทาง</Text>
+        <Text style={styles.topTitle}>Journey summary</Text>
         <Pressable onPress={confirmDelete} style={styles.iconButton}><Ionicons name="trash-outline" size={19} color={colors.danger} /></Pressable>
       </View>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.replayCard}>
           <View style={styles.replayHeader}>
-            <View><Text style={[styles.status, { color: statusColor }]}>{statusText}</Text><Text style={styles.date}>{formatThaiDate(session.startedAt)}</Text></View>
+            <View><Text style={[styles.status, { color: statusColor }]}>{statusText}</Text><Text style={styles.date}>{formatDate(session.startedAt)}</Text></View>
             <View style={styles.sensitivity}><Text style={styles.sensitivityText}>{session.sensitivity.toUpperCase()}</Text></View>
           </View>
           <View style={[styles.imageWrap, { transform: [{ perspective: 700 }, { rotateX }, { rotateY }] }]}>
             <Image source={require('../../../assets/fragile-icon.png')} style={styles.image} resizeMode="contain" />
           </View>
           <View style={styles.replayFooter}>
-            <View><Text style={styles.replayValue}>{sample?.tiltAngle.toFixed(0) ?? '0'}°</Text><Text style={styles.replayLabel}>มุม ณ ช่วงเวลา</Text></View>
+            <View><Text style={styles.replayValue}>{sample?.tiltAngle.toFixed(0) ?? '0'}°</Text><Text style={styles.replayLabel}>Tilt at this moment</Text></View>
             <Pressable onPress={() => { setReplayIndex(0); setReplaying((value) => !value); }} style={styles.replayButton}>
               <Ionicons name={replaying ? 'pause' : 'play'} size={18} color={colors.cream} />
-              <Text style={styles.replayButtonText}>{replaying ? 'หยุด' : 'เล่นเส้นทาง'}</Text>
+              <Text style={styles.replayButtonText}>{replaying ? 'Pause' : 'Replay journey'}</Text>
             </Pressable>
           </View>
         </View>
 
         <View style={styles.stats}>
-          <Stat label="ระยะเวลา" value={formatDuration(session.endedAt - session.startedAt)} />
-          <Stat label="มุมสูงสุด" value={`${session.maxTilt.toFixed(0)}°`} />
-          <Stat label="แรงสูงสุด" value={`${session.maxImpact.toFixed(1)}g`} />
-          <Stat label="การหมุนสูงสุด" value={`${session.maxRotation.toFixed(1)}`} />
+          <Stat label="Duration" value={formatDuration(session.endedAt - session.startedAt)} />
+          <Stat label="Peak tilt" value={`${session.maxTilt.toFixed(0)}°`} />
+          <Stat label="Peak force" value={`${session.maxImpact.toFixed(1)}g`} />
+          <Stat label="Peak rotation" value={`${session.maxRotation.toFixed(1)}`} />
         </View>
 
         <MotionChart samples={session.samples.slice(0, replayIndex || session.samples.length)} />
 
         <View style={styles.eventsCard}>
-          <Text style={styles.sectionTitle}>รายละเอียดเหตุการณ์</Text>
-          <Text style={styles.sectionHint}>{session.events.length} เหตุการณ์ที่บันทึกได้</Text>
+          <Text style={styles.sectionTitle}>Event details</Text>
+          <Text style={styles.sectionHint}>{session.events.length} recorded events</Text>
           {session.events.length ? session.events.map((event) => <EventRow key={event.id} event={event} />) : (
-            <View style={styles.safeEmpty}><Ionicons name="shield-checkmark" size={30} color={colors.mint} /><Text style={styles.safeText}>ไม่พบการจัดการที่เสี่ยงต่อพัสดุ</Text></View>
+            <View style={styles.safeEmpty}><Ionicons name="shield-checkmark" size={30} color={colors.mint} /><Text style={styles.safeText}>No risky handling detected</Text></View>
           )}
         </View>
       </ScrollView>

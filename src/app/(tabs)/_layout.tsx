@@ -24,21 +24,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'ตรวจสอบ',
+          title: 'Monitor',
           tabBarIcon: ({ color, size }) => <Ionicons name="cube" color={typeof color === 'string' ? color : colors.cocoa} size={size} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
-          title: 'ประวัติ',
+          title: 'History',
           tabBarIcon: ({ color, size }) => <Ionicons name="time" color={typeof color === 'string' ? color : colors.cocoa} size={size} />,
         }}
       />
       <Tabs.Screen
         name="about"
         options={{
-          title: 'ข้อมูล',
+          title: 'Guide',
           tabBarIcon: ({ color, size }) => <Ionicons name="leaf" color={typeof color === 'string' ? color : colors.cocoa} size={size} />,
         }}
       />
