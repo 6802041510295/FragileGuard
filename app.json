@@ -1,25 +1,46 @@
 {
   "expo": {
     "name": "FragileGuard",
-    "slug": "FragileGuard",
+    "slug": "fragileguard",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/fragile-icon.png",
+    "scheme": "fragileguard",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.student.fragileguard",
+      "infoPlist": {
+        "NSMotionUsageDescription": "FragileGuard uses motion sensors to detect parcel tilt, rotation, and impacts during a monitoring session."
+      }
     },
     "android": {
+      "package": "com.student.fragileguard",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#67B39B",
+        "foregroundImage": "./assets/fragile-icon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/fragile-icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F8E9A1",
+          "image": "./assets/fragile-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain"
+        }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
